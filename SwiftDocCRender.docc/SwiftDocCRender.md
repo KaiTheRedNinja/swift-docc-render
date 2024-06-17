@@ -10,6 +10,17 @@ DocC-Render displays documentation produced by [DocC](https://www.swift.org/docu
 
 DocC-Render is a Single Page Application (SPA for short), powered by [Vue.js](https://vuejs.org). SPAs are web apps that are rendered entirely in the browser using JavaScript. Pages and content are generated dynamically at runtime, based on DocC generated Render JSON data.
 
+### New Components
+
+#### Latex
+
+This implementation of LaTeX hijacks the `math` code block language to render LaTeX code. This implementation 
+is limited to display math mode and does not support inline math mode.
+
+```math
+c = \pm\sqrt{a^2 + b^2}
+```
+
 ## Topics
 
 ### Contributing and internals

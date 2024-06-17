@@ -10,6 +10,10 @@
 
 import hljs from 'highlight.js/lib/core';
 
+// [KAI] Import KaTeX
+// This is a workaround to implement LaTeX, by hijacking the syntax highlight mechanism
+const katex = require('katex');
+
 /** A map of custom aliases for supported languages (additions to default hljs aliases) */
 const CustomLanguageAliases = {
   objectivec: ['objective-c'],
@@ -137,6 +141,11 @@ function memoizedGetLanguageByAlias(language) {
  * @return {Promise<boolean>}
  */
 export const registerHighlightLanguage = async (originalLanguage) => {
+  // [KAI] if the language is math, return a promise that resolves immediately to true
+  if (originalLanguage === 'math') {
+    return Promise.resolve(true);
+  }
+
   // normalize the language parameter
   const language = memoizedGetLanguageByAlias(originalLanguage);
   // if we dont support the language, or its already registered, bail silently
@@ -254,8 +263,20 @@ export function highlight(code, language) {
 export function highlightContent(content, language) {
   // join the lines back
   const rawCode = content.join('\n');
-  // highlight the code as normal
-  const highlightedCode = highlight(rawCode, language);
+
+  let highlightedCode;
+
+  // [KAI] If the language is math, use KaTeX to render the content
+  if (language === 'math') {
+    highlightedCode = katex.renderToString(rawCode, {
+      throwOnError: false,
+      displayMode: true,
+      output: 'mathml',
+    });
+  } else {
+    // highlight the code as normal
+    highlightedCode = highlight(rawCode, language);
+  }
 
   // create a temporary element to mount the highlighted code into
   const tempElement = document.createElement('code');

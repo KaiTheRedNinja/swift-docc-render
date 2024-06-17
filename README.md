@@ -1,5 +1,39 @@
 # Swift-DocC-Render
 
+This is my personal fork of Swift-DocC-Render, with additional features and improvements.
+
+## Development
+
+Use `npm run serve` to start a development server with hot reload. This should only be used for checking that
+your code compiles. To preview the produced documentation, see the [Usage](#usage) section.
+
+## Usage
+
+1. Follow steps 1 and 2 of the installation instructions in the [Getting Started](#getting-started) section.
+2. Use `npm run build` to build the project. This should produce a `dist` directory in the project.
+3. Run `export DOCC_HTML_DIR="/path/to/swift-docc-render/dist"` in the terminal, where the path is the location 
+of the `dist` directory in the project.
+
+To preview the documentation, run `npm run docs` to open this project's documentation, using your compiled
+renderer. This will open a preview server on http://localhost:8000/documentation/swiftdoccrender.
+
+To use your renderer to build your own project, run `xcrun docc convert . --transform-for-static-hosting` 
+with the flags you would normally use.
+
+## Changes
+
+### LaTeX Support
+
+This repository adds support for LaTeX, using the [KaTeX](https://katex.org/) library. This is
+a limited implementation that only supports display math mode, and does not support inline math mode.
+
+To use LaTeX in your documentation, write a code block with the language set to `math`. These code
+blocks must contain only one line of valid LaTeX code.
+
+# Original README
+
+Below is the original README from the Apple Swift-DocC-Render repository.
+
 Swift-DocC-Render is a web Single Page Application (SPA) powered by [Vue.js](https://vuejs.org/) for creating rich code documentation websites. Pages and content are generated using render JSON data from DocC. It comes with a well suited design for documentation websites.
 SPAs are web apps that render dynamically at runtime entirely in the browser, using JavaScript.
 
