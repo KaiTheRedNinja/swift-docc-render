@@ -75,6 +75,10 @@ $base-colors: (
     light: rgb(0, 128, 0),
     dark: rgb(0, 153, 0)
   ),
+  figure-yellow: (
+    light: rgb(255, 204, 0),
+    dark: rgb(255, 204, 0)
+  ),
   fill-gray-secondary: (
     light: rgb(245, 245, 245),
     dark: rgb(34, 34, 34)
@@ -91,9 +95,13 @@ $base-colors: (
     light: rgb(240, 255, 240),
     dark: rgb(0, 51, 0)
   ),
+  fill-yellow: (
+    light: rgb(255, 255, 225),
+    dark: rgb(87, 87, 9)
+  ),
   fill-blue: (
-    light: rgb(0, 0, 255),
-    dark: rgb(0, 102, 255)
+    light: rgb(228, 228, 255),
+    dark: rgb(25, 25, 148)
   ),
   fill-light-blue-secondary: (
     light: rgb(209, 209, 255),

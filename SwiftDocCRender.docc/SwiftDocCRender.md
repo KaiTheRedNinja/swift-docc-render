@@ -21,6 +21,18 @@ is limited to display math mode and does not support inline math mode.
 c = \pm\sqrt{a^2 + b^2}
 ```
 
+#### Colourful Asides
+
+> Note: Notes are gray
+
+> Important: Importants are yellow
+
+> Warning: Warnings are red
+
+> Tip: Tips are green
+
+> Experiment: Experiments are blue
+
 ## Topics
 
 ### Contributing and internals

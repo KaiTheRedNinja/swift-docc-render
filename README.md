@@ -30,6 +30,16 @@ a limited implementation that only supports display math mode, and does not supp
 To use LaTeX in your documentation, write a code block with the language set to `math`. These code
 blocks must contain only one line of valid LaTeX code.
 
+### Colourful Asides
+
+This repository adds support for colourful asides, which are styled notes that can be used to draw
+attention to important information. The following asides are supported:
+- Note: Grey (default for DocC)
+- Important: Yellow
+- Warning: Red
+- Tip: Green
+- Experiment: Blue
+
 # Original README
 
 Below is the original README from the Apple Swift-DocC-Render repository.

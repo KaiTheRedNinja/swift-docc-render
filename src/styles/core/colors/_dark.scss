@@ -12,7 +12,9 @@
   --color-fill: #{dark-color(fill)};
   --color-fill-secondary: #{dark-color(fill-secondary)};
   --color-fill-tertiary: #{dark-color(fill-tertiary)};
+  --color-fill-quaternary: #{base-color(fill-quaternary)};
   --color-fill-blue: #{dark-color(fill-blue)};
+  --color-fill-yellow: #{dark-color(fill-yellow)};
   --color-fill-light-blue-secondary: #{dark-color(fill-light-blue-secondary)};
   --color-fill-gray: #{dark-color(fill-gray)};
   --color-fill-gray-secondary: #{dark-color(fill-gray-secondary)};
@@ -23,6 +25,7 @@
   --color-fill-red-secondary: #{dark-color(fill-red-secondary)};
   --color-figure-blue: #{dark-color(figure-blue)};
   --color-figure-gray: #{dark-color(figure-gray)};
+  --color-figure-yellow: #{dark-color(figure-yellow)};
   --color-figure-gray-secondary: #{dark-color(figure-gray-secondary)};
   --color-figure-gray-secondary-alt: #{dark-color(figure-gray-secondary-alt)};
   --color-figure-gray-tertiary: #{dark-color(figure-gray-tertiary)};
