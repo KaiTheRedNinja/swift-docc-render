@@ -41,6 +41,10 @@ attention to important information. The following asides are supported:
 - Tip: Green
 - Experiment: Blue
 
+### External Link Call to Actions
+Call to Actions, the buttons that appear at the top of the page, now open links in new tabs instead of
+replacing the current page.
+
 # Original README
 
 Below is the original README from the Apple Swift-DocC-Render repository.

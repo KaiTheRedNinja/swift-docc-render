@@ -8,11 +8,17 @@
   See https://swift.org/CONTRIBUTORS.txt for Swift project authors
 -->
 
+<!--
+  [KAI] I added `target="_blank"` and `rel="noopener noreferrer"` to open 
+  the link in a new tab, without associated security risks.
+-->
 <template>
   <component
     :is="resolvedComponent"
     class="button-cta"
     :class="{ 'is-dark': isDark }"
+    target="_blank"
+    rel="noopener noreferrer"
     v-bind="componentProps"
   >
     <slot />
