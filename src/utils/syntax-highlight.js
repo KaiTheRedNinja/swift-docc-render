@@ -261,19 +261,31 @@ export function highlight(code, language) {
  * @returns {string[]}
  */
 export function highlightContent(content, language) {
-  // join the lines back
-  const rawCode = content.join('\n');
-
   let highlightedCode;
 
   // [KAI] If the language is math, use KaTeX to render the content
   if (language === 'math') {
-    highlightedCode = katex.renderToString(rawCode, {
-      throwOnError: false,
-      displayMode: true,
-      output: 'mathml',
+    // eslint-disable-next-line
+    console.log(content)
+
+    highlightedCode = '';
+    const lines = [];
+    content.forEach((line) => {
+      lines.push(katex.renderToString(line, {
+        throwOnError: false,
+        displayMode: true,
+        output: 'mathml',
+      }));
     });
+
+    highlightedCode = lines.join('\n');
+
+    // eslint-disable-next-line
+    console.log(highlightedCode)
   } else {
+    // join the lines back
+    const rawCode = content.join('\n');
+
     // highlight the code as normal
     highlightedCode = highlight(rawCode, language);
   }
@@ -281,6 +293,7 @@ export function highlightContent(content, language) {
   // create a temporary element to mount the highlighted code into
   const tempElement = document.createElement('code');
   tempElement.innerHTML = highlightedCode;
+
   // duplicate multiline tags
   sanitizeMultilineNodes(tempElement);
 

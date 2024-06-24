@@ -28,7 +28,8 @@ This repository adds support for LaTeX, using the [KaTeX](https://katex.org/) li
 a limited implementation that only supports display math mode, and does not support inline math mode.
 
 To use LaTeX in your documentation, write a code block with the language set to `math`. These code
-blocks must contain only one line of valid LaTeX code.
+blocks must contain only one line of valid LaTeX code. You may use multiple lines, but note that empty
+lines have weight and will be rendered as blank space.
 
 ### Colourful Asides
 
