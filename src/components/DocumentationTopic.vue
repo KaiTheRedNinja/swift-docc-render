@@ -15,7 +15,7 @@
   >
     <component
       :is="isTargetIDE ? 'div' : 'main'"
-      class="main" id="main"
+      class="main" id="app-main"
     >
       <DocumentationHero
         :role="role"
@@ -129,7 +129,6 @@
               :source="remoteSource"
               :sections="primaryContentSectionsSanitized"
             />
-            <ViewMore v-if="shouldShowViewMoreLink" :url="viewMoreLink" />
           </div>
           <Topics
             v-if="shouldRenderTopicSection"
@@ -145,14 +144,20 @@
             :isSymbolBeta="isSymbolBeta"
           />
           <Relationships
-            v-if="relationshipsSections && !enableMinimized"
+            v-if="relationshipsSections"
             :sections="relationshipsSections"
+            :enableMinimized="enableMinimized"
           />
           <!-- NOTE: see also may contain information about other apis, so we cannot
           pass deprecation and beta information -->
           <SeeAlso
             v-if="seeAlsoSections && !enableMinimized"
             :sections="seeAlsoSections"
+          />
+          <ViewMore
+            v-if="shouldShowViewMoreLink"
+            :url="viewMoreLink"
+            class="minimized-container"
           />
         </div>
         <template v-if="enableOnThisPageNav">
@@ -778,7 +783,7 @@ $space-size: 15px;
   }
 }
 
-#main {
+#app-main {
   outline-style: none;
   height: 100%;
 
@@ -830,6 +835,11 @@ $space-size: 15px;
     --spacing-param: var(--spacing-stacked-margin-large);
     --aside-border-radius: 6px;
     --code-border-radius: 6px;
+
+    &:not(.declarations-container) {
+      padding-left: 1.4rem;
+      padding-right: 1.4rem;
+    }
 
     .description {
       margin-bottom: 1.5em;
@@ -902,11 +912,6 @@ $space-size: 15px;
   :deep(.content + *) {
     margin-top: var(--spacing-stacked-margin-large);
   }
-}
-
-.full-width-container .doc-content .minimized-container {
-  padding-left: 1.4rem;
-  padding-right: 1.4rem;
 }
 
 :deep() {
