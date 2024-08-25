@@ -11,6 +11,7 @@
 <script>
 import referencesProvider from 'docc-render/mixins/referencesProvider';
 import Aside from './ContentNode/Aside.vue';
+import FunctionPlot from './ContentNode/FunctionPlot.vue';
 import CodeListing from './ContentNode/CodeListing.vue';
 import LinkableHeading from './ContentNode/LinkableHeading.vue';
 import CodeVoice from './ContentNode/CodeVoice.vue';
@@ -260,8 +261,6 @@ function renderNode(createElement, references) {
     switch (node.type) {
     case BlockType.aside: {
       const props = { kind: node.style, name: node.name };
-      // eslint-disable-next-line no-console
-      console.log('node content: ', node.content);
       return createElement(Aside, { props }, (
         renderChildren(node.content)
       ));
@@ -273,13 +272,7 @@ function renderNode(createElement, references) {
 
       // [KAI]: Intercept code listings if the syntax is "graph", and render a graph instead
       if (node.syntax === 'graph') {
-        // eslint-disable-next-line no-console
-        console.log('Graph node: ', node);
-        // For now, we're just creating an aside with the code listing content.
-        const props = { kind: 'note', name: 'Note' };
-        return createElement(Aside, { props }, (
-          renderChildren(node.code)
-        ));
+        return createElement(FunctionPlot, { props: { content: node.code.join('\n') } });
       }
 
       // Otherwise, render the code listing as normal

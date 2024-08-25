@@ -43,19 +43,17 @@ This can't really be demonstrated, trust me bro it works
 #### Graphs
 
 ```graph
-{
-    yAxis: { domain: [-1, 9] },
-    grid: true,
-    data: [
-        {
+yAxis: { domain: [-1, 9] },
+grid: true,
+data: [
+    {
         fn: "x^2",
         derivative: {
             fn: "2 * x",
             updateOnMouseMove: true,
         },
-        },
-    ],
-}
+    },
+],
 ```
 
 ## Topics

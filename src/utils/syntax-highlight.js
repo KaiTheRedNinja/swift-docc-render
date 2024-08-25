@@ -265,9 +265,6 @@ export function highlightContent(content, language) {
 
   // [KAI] If the language is math, use KaTeX to render the content
   if (language === 'math') {
-    // eslint-disable-next-line
-    console.log(content)
-
     highlightedCode = '';
     const lines = [];
     content.forEach((line) => {
@@ -279,9 +276,6 @@ export function highlightContent(content, language) {
     });
 
     highlightedCode = lines.join('\n');
-
-    // eslint-disable-next-line
-    console.log(highlightedCode)
   } else {
     // join the lines back
     const rawCode = content.join('\n');
