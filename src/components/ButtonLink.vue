@@ -9,7 +9,7 @@
 -->
 
 <!--
-  [KAI] I added `target="_blank"` and `rel="noopener noreferrer"` to open 
+  [KAI] I added `target="_blank"` and `rel="noopener noreferrer"` to open
   the link in a new tab, without associated security risks.
 -->
 <template>

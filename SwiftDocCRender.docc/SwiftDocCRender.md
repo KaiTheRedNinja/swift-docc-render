@@ -40,6 +40,24 @@ g = \pm\sqrt{h^2 + i^2}
 #### External Link Call to Actions
 This can't really be demonstrated, trust me bro it works
 
+#### Graphs
+
+```graph
+{
+    yAxis: { domain: [-1, 9] },
+    grid: true,
+    data: [
+        {
+        fn: "x^2",
+        derivative: {
+            fn: "2 * x",
+            updateOnMouseMove: true,
+        },
+        },
+    ],
+}
+```
+
 ## Topics
 
 ### Contributing and internals

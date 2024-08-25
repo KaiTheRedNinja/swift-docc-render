@@ -260,6 +260,8 @@ function renderNode(createElement, references) {
     switch (node.type) {
     case BlockType.aside: {
       const props = { kind: node.style, name: node.name };
+      // eslint-disable-next-line no-console
+      console.log('node content: ', node.content);
       return createElement(Aside, { props }, (
         renderChildren(node.content)
       ));
@@ -269,12 +271,25 @@ function renderNode(createElement, references) {
         return renderFigure(node);
       }
 
+      // [KAI]: Intercept code listings if the syntax is "graph", and render a graph instead
+      if (node.syntax === 'graph') {
+        // eslint-disable-next-line no-console
+        console.log('Graph node: ', node);
+        // For now, we're just creating an aside with the code listing content.
+        const props = { kind: 'note', name: 'Note' };
+        return createElement(Aside, { props }, (
+          renderChildren(node.code)
+        ));
+      }
+
+      // Otherwise, render the code listing as normal
       const props = {
         syntax: node.syntax,
         fileType: node.fileType,
         content: node.code,
         showLineNumbers: node.showLineNumbers,
       };
+
       return createElement(CodeListing, { props });
     }
     case BlockType.endpointExample: {

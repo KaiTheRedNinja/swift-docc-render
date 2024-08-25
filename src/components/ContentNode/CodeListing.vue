@@ -36,7 +36,7 @@
         class="code-line"
         v-html="line"
       /></span><!-- This new line must stay -->
-</template></CodeBlock></pre>
+      </template></CodeBlock></pre>
     </div>
   </div>
 </template>
