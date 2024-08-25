@@ -272,7 +272,13 @@ function renderNode(createElement, references) {
 
       // [KAI]: Intercept code listings if the syntax is "graph", and render a graph instead
       if (node.syntax === 'graph') {
-        return createElement(FunctionPlot, { props: { content: node.code.join('\n') } });
+        // Graph must at least have a name
+        if (node.code.length === 0) return null;
+        const props = {
+          content: node.code.slice(1).join('\n'),
+          graphId: `graph-${node.code[0]}`, // name of graph
+        };
+        return createElement(FunctionPlot, { props });
       }
 
       // Otherwise, render the code listing as normal

@@ -43,6 +43,7 @@ This can't really be demonstrated, trust me bro it works
 #### Graphs
 
 ```graph
+quadratic
 yAxis: { domain: [-1, 9] },
 grid: true,
 data: [
@@ -54,6 +55,18 @@ data: [
         },
     },
 ],
+```
+
+```graph
+circle
+xAxis: {
+  label: 'real'
+},
+yAxis: {
+  label: 'imaginary'
+},
+grid: true,
+data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
 ```
 
 ## Topics

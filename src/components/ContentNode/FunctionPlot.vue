@@ -8,10 +8,13 @@
   See https://swift.org/CONTRIBUTORS.txt for Swift project authors
 -->
 
-<!-- [KAI]: This uses the FunctionPlot library. It hijacks the CodeListing node to render a graph instead. -->
+<!--
+  [KAI]: This uses the FunctionPlot library.
+  It hijacks the CodeListing node to render a graph instead.
+-->
 
 <template>
-  <div id="root"></div>
+  <div :id="graphId"></div>
 </template>
 
 <script lang="ts">
@@ -22,6 +25,7 @@ export default {
   name: 'FunctionPlot',
   props: {
     content: String,
+    graphId: String,
   },
   setup(props) {
     onMounted(() => {
@@ -33,7 +37,7 @@ export default {
         // eslint-disable-next-line no-new-func
         const plotConfigFunction = new Function(`
           return {
-            target: "#root",
+            target: "#${props.graphId}",
             ${props.content}
           };
         `);
