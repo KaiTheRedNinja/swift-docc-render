@@ -45,6 +45,32 @@ attention to important information. The following asides are supported:
 Call to Actions, the buttons that appear at the top of the page, now open links in new tabs instead of
 replacing the current page.
 
+### Graphs
+
+This repository adds support for rendering graphs using the [function-plot](https://mauriciopoppe.github.io/function-plot/) 
+library. It supports all functionality of the library, because it exposes all parameters to the documentation
+writer.
+
+To use graphs in your documentation, write a code block with the language set to `graph`. The first line 
+is the identifier of the graph, which is not shown to the user but is used to identify the graph. The
+identifier must be unique betweeng graphs on the same page. The rest of the code block is as if it were
+entered directly into the `functionPlot` function in JavaScript, excluding `target` because that is what 
+the first line does. Example:
+
+```
+graph-example
+yAxis: { domain: [-1, 1] },
+xAxis: { domain: [8, 24] },
+data: [
+  {
+    fn: 'sin(x)'
+  }
+]
+```
+
+This current implementation uses the _incredibly_ insecure `new Function()` constructor to evaluate the
+code block. This is a security risk and is likely to be changed in the future.
+
 # Original README
 
 Below is the original README from the Apple Swift-DocC-Render repository.

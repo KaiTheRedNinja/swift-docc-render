@@ -42,6 +42,10 @@ This can't really be demonstrated, trust me bro it works
 
 #### Graphs
 
+This implementation of graphs hijacks the `graph` code block language to render a graph, using the 
+[function-plot](https://mauriciopoppe.github.io/function-plot/) library. This implementation exposes all
+parameters to the documentation writer.
+
 ```graph
 quadratic
 yAxis: { domain: [-1, 9] },
