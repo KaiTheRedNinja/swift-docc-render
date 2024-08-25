@@ -30,9 +30,6 @@ export default {
   setup(props) {
     onMounted(() => {
       try {
-        // eslint-disable-next-line no-console
-        console.log('Graph mount content: ', props.content);
-
         // Create a new function with the raw parameters passed in the content prop
         // eslint-disable-next-line no-new-func
         const plotConfigFunction = new Function(`
@@ -44,9 +41,6 @@ export default {
 
         // Execute the function to get the config object
         const plotConfig = plotConfigFunction();
-
-        // eslint-disable-next-line no-console
-        console.log('Parsed json: ', plotConfig);
 
         // Call functionPlot with the generated configuration
         functionPlot(plotConfig);
