@@ -30,46 +30,49 @@
     >
       <PortalTarget name="modal-destination" multiple />
       <template #aside="{ scrollLockID, breakpoint }">
-        <NavigatorDataProvider
-          :interface-language="interfaceLanguage"
-          :technologyUrl="technology ? technology.url : ''"
-          :api-changes-version="selectedAPIChangesVersion"
-          ref="NavigatorDataProvider"
-        >
-          <template #default="slotProps">
-            <div class="documentation-layout-aside">
-              <QuickNavigationModal
-                v-if="enableQuickNavigation"
-                :children="slotProps.flatChildren"
-                :showQuickNavigationModal.sync="showQuickNavigationModal"
-                :technology="technology ? technology.title : ''"
-              />
-              <transition name="delay-hiding">
-                <Navigator
-                  v-show="sidenavVisibleOnMobile || breakpoint === BreakpointName.large"
-                  :flatChildren="slotProps.flatChildren"
-                  :parent-topic-identifiers="parentTopicIdentifiers"
-                  :technology="slotProps.technology || technology"
-                  :is-fetching="slotProps.isFetching"
-                  :error-fetching="slotProps.errorFetching"
-                  :api-changes="slotProps.apiChanges"
-                  :references="references"
-                  :navigator-references="slotProps.references"
-                  :scrollLockID="scrollLockID"
-                  :render-filter-on-top="breakpoint !== BreakpointName.large"
-                  @close="handleToggleSidenav(breakpoint)"
-                >
-                  <template v-if="enableQuickNavigation" #filter>
-                    <QuickNavigationButton @click.native="openQuickNavigationModal" />
-                  </template>
-                  <template #navigator-head="{ className }">
-                    <slot name="nav-title" :className="className" />
-                  </template>
-                </Navigator>
-              </transition>
-            </div>
-          </template>
-        </NavigatorDataProvider>
+        <div class="documentation-layout-aside">
+          <QuickNavigationModal
+            v-if="enableQuickNavigation"
+            :children="quickNavNodes || indexNodes"
+            :showQuickNavigationModal.sync="showQuickNavigationModal"
+            :technology="technology ? technology.title : ''"
+            :placeholder="quickNavPlaceholder"
+          />
+          <transition name="delay-hiding">
+            <slot
+              name="navigator"
+              v-bind="{
+                scrollLockID,
+                breakpoint,
+                sidenavVisibleOnMobile,
+                handleToggleSidenav,
+                enableQuickNavigation,
+                openQuickNavigationModal,
+              }"
+            >
+              <Navigator
+                key="base-navigator"
+                v-show="sidenavVisibleOnMobile || breakpoint === BreakpointName.large"
+                v-bind="{ ...navigatorProps, technologyProps }"
+                :parent-topic-identifiers="parentTopicIdentifiers"
+                :references="references"
+                :scrollLockID="scrollLockID"
+                :render-filter-on-top="breakpoint !== BreakpointName.large"
+                @close="handleToggleSidenav(breakpoint)"
+              >
+                <template v-if="enableQuickNavigation" #filter>
+                  <QuickNavigationButton @click.native="openQuickNavigationModal" />
+                </template>
+                <template #above-navigator-head>
+                  <slot name="above-navigator-head"/>
+                </template>
+                <template #navigator-head="{ className }">
+                  <slot name="nav-title" :className="className" />
+                </template>
+              </Navigator>
+            </slot>
+          </transition>
+        </div>
       </template>
       <slot name="content" />
     </AdjustableSidebarWidth>
@@ -80,14 +83,14 @@
 import { PortalTarget } from 'portal-vue';
 import QuickNavigationButton from 'docc-render/components/Navigator/QuickNavigationButton.vue';
 import QuickNavigationModal from 'docc-render/components/Navigator/QuickNavigationModal.vue';
-import AdjustableSidebarWidth from 'docc-render/components/AdjustableSidebarWidth.vue';
+import AdjustableSidebarWidth from 'theme/components/AdjustableSidebarWidth.vue';
 import Navigator from 'docc-render/components/Navigator.vue';
 import onPageLoadScrollToFragment from 'docc-render/mixins/onPageLoadScrollToFragment';
 import { BreakpointName } from 'docc-render/utils/breakpoints';
 import { storage } from 'docc-render/utils/storage';
 import { getSetting } from 'docc-render/utils/theme-settings';
 
-import NavigatorDataProvider from 'theme/components/Navigator/NavigatorDataProvider.vue';
+import indexDataGetter from 'theme/mixins/indexDataGetter';
 import DocumentationNav from 'theme/components/DocumentationTopic/DocumentationNav.vue';
 
 const NAVIGATOR_HIDDEN_ON_LARGE_KEY = 'navigator-hidden-large';
@@ -98,13 +101,12 @@ export default {
   components: {
     Navigator,
     AdjustableSidebarWidth,
-    NavigatorDataProvider,
     Nav: DocumentationNav,
     QuickNavigationButton,
     QuickNavigationModal,
     PortalTarget,
   },
-  mixins: [onPageLoadScrollToFragment],
+  mixins: [onPageLoadScrollToFragment, indexDataGetter],
   props: {
     enableNavigator: Boolean,
     diffAvailability: {
@@ -133,7 +135,7 @@ export default {
     },
     technology: {
       type: Object,
-      require: false,
+      required: false,
     },
     parentTopicIdentifiers: {
       type: Array,
@@ -141,6 +143,14 @@ export default {
     },
     navigatorFixedWidth: {
       type: Number,
+      default: null,
+    },
+    quickNavNodes: {
+      type: Array,
+      default: null,
+    },
+    quickNavPlaceholder: {
+      type: String,
       default: null,
     },
   },
@@ -244,14 +254,14 @@ export default {
 }
 
 .documentation-layout {
-  --delay: 1s;
+  --nav-transition-duration: 0.15s;
   display: flex;
   flex-flow: column;
   background: var(--colors-text-background, var(--color-text-background));
 
   .delay-hiding-leave-active {
     // don't hide navigator until delay time has passed
-    transition: display var(--delay);
+    transition: display var(--nav-transition-duration);
   }
 }
 

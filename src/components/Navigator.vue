@@ -14,7 +14,7 @@
     class="navigator"
   >
     <NavigatorCard
-      v-show="!isFetching"
+      v-if="!isFetching"
       v-bind="technologyProps"
       :type="type"
       :children="flatChildren"
@@ -27,13 +27,16 @@
       @close="$emit('close')"
     >
       <template #filter><slot name="filter" /></template>
+      <template #above-navigator-head>
+        <slot name="above-navigator-head"/>
+      </template>
       <template #navigator-head>
         <slot name="navigator-head" className="nav-title"/>
       </template>
     </NavigatorCard>
     <LoadingNavigatorCard
       @close="$emit('close')"
-      v-if="isFetching"
+      v-else
     />
     <div aria-live="polite" class="visuallyhidden">
       {{ $t('navigator.navigator-is', {
@@ -91,7 +94,7 @@ export default {
       type: Array,
       required: true,
     },
-    technology: {
+    technologyProps: {
       type: Object,
       required: false,
     },
@@ -153,13 +156,6 @@ export default {
      * The root item is always a module
      */
     type: () => TopicTypes.module,
-    technologyProps: ({ technology }) => (
-      !technology ? null : {
-        technology: technology.title,
-        technologyPath: technology.path || technology.url,
-        isTechnologyBeta: technology.beta,
-      }
-    ),
   },
 };
 </script>

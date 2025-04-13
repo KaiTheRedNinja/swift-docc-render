@@ -124,7 +124,8 @@
   },
   "availability": {
     "introduced-and-deprecated": "Introduced in {name} {introducedAt} and deprecated in {name} {deprecatedAt}",
-    "available-on": "Available on {name} {introducedAt} and later"
+    "available-on-platform": "Available on {name}",
+    "available-on-platform-version": "Available on {name} {introducedAt} and later"
   },
   "more": "More",
   "less": "Less",
@@ -132,7 +133,7 @@
   "filter": {
     "title": "Filter",
     "search": "Search",
-    "search-symbols": "Search symbols in {technology}",
+    "search-symbols": "Search for symbols in {technology}",
     "suggested-tags": "Suggested tag | Suggested tags",
     "selected-tags": "Selected tag | Selected tags",
     "add-tag": "Add tag",
@@ -171,7 +172,9 @@
   "parameters": {
     "default": "Default",
     "minimum": "Minimum",
+    "minimumLength": "Minimum length",
     "maximum": "Maximum",
+    "maximumLength": "Maximum length",
     "possible-types": "Type | Possible types",
     "possible-values": "Value | Possible Values"
   },

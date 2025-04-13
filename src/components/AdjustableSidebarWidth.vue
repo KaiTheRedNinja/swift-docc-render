@@ -157,6 +157,7 @@ export default {
       focusTrapInstance: null,
       mobileTopOffset: 0,
       topOffset: 0,
+      scrollLockContainer: null,
     };
   },
   computed: {
@@ -353,18 +354,23 @@ export default {
      * Toggles the scroll lock on/off
      */
     async toggleScrollLock(lock) {
-      const scrollLockContainer = document.getElementById(this.scrollLockID);
-      if (lock) {
-        await this.$nextTick();
-        scrollLock.lockScroll(scrollLockContainer);
-        // lock focus
-        this.focusTrapInstance.start();
-        // hide sibling elements from VO
-        changeElementVOVisibility.hide(this.$refs.aside);
-      } else {
-        scrollLock.unlockScroll(scrollLockContainer);
+      // if applicable, turn off lock on previous container
+      if (this.scrollLockContainer) {
+        scrollLock.unlockScroll(this.scrollLockContainer);
         this.focusTrapInstance.stop();
         changeElementVOVisibility.show(this.$refs.aside);
+        this.scrollLockContainer = null;
+      }
+      if (lock) {
+        await this.$nextTick();
+        this.scrollLockContainer = document.getElementById(this.scrollLockID);
+        if (this.scrollLockContainer) {
+          scrollLock.lockScroll(this.scrollLockContainer);
+          // lock focus
+          this.focusTrapInstance.start();
+          // hide sibling elements from VO
+          changeElementVOVisibility.hide(this.$refs.aside);
+        }
       }
     },
     storeTopOffset: throttle(function storeTopOffset() {
@@ -458,7 +464,7 @@ export default {
     left: 0;
     z-index: $nav-z-index + 1;
     transform: translateX(-100%);
-    transition: transform 0.15s ease-in;
+    transition: transform var(--nav-transition-duration) ease-in;
     left: 0;
 
     :deep(.aside-animated-child) {
@@ -471,8 +477,9 @@ export default {
       :deep(.aside-animated-child) {
         --index: 0;
         opacity: 1;
-        transition: opacity 0.15s linear;
-        transition-delay: calc(var(--index) * 0.15s + 0.15s);
+        transition: opacity var(--nav-transition-duration) linear;
+        transition-delay:
+          calc(var(--index) * var(--nav-transition-duration) + var(--nav-transition-duration));
       }
     }
 
