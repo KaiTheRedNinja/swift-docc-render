@@ -212,8 +212,9 @@ code {
   letter-spacing: 0;
 }
 
-// [KAI] Add background colour to inline code that is not a code block
+// [KAI] Add background colour to latex and inline code that is not a code block
 // This is to make it more identifiable
+.inline-katex-mathml-container,
 :not(pre) > code {
   /* Your styles here */
   background: var(--color-code-background);

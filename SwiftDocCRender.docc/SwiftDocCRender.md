@@ -14,8 +14,10 @@ DocC-Render is a Single Page Application (SPA for short), powered by [Vue.js](ht
 
 #### Latex
 
-This implementation of LaTeX hijacks the `math` code block language to render LaTeX code. This implementation 
-is limited to display math mode and does not support inline math mode. Multiline LaTeX code blocks are also supported.
+This implementation of LaTeX hijacks the `math` code block language to render LaTeX code. 
+
+To use multiline LaTeX, use the `math` code block language and write your LaTeX code inside. Each line of LaTeX code must be valid LaTeX code, 
+and empty lines will be rendered as blank space.
 
 ```math
 c = \pm\sqrt{a^2 + b^2}
@@ -24,6 +26,9 @@ d = \pm\sqrt{e^2 + f^2}
 
 g = \pm\sqrt{h^2 + i^2}
 ```
+
+To use inline LaTeX, use backticks (like you would for inline code), with dollar signs after the opening and before the closing backtick, and write your LaTeX code inside.
+For example, `$a^2 + b^2 = c^2$`.
 
 #### Colourful Asides
 

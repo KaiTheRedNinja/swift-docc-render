@@ -33,6 +33,10 @@ import LinksBlock from './ContentNode/LinksBlock.vue';
 import DeviceFrame from './ContentNode/DeviceFrame.vue';
 import ThematicBreak from './ContentNode/ThematicBreak.vue';
 
+// [KAI] Import KaTeX
+// This is a workaround to implement LaTeX inline, by hijacking the "code voice" mechanism
+const katex = require('katex');
+
 const { CaptionPosition, CaptionTag } = Caption.constants;
 
 export const BlockType = {
@@ -440,6 +444,24 @@ function renderNode(createElement, references) {
     case BlockType.thematicBreak:
       return createElement(ThematicBreak);
     case InlineType.codeVoice:
+      // [KAI]: Intercept code voice and render LaTeX instead
+      if (node.code.startsWith('$') && node.code.endsWith('$')) {
+        const line = node.code.slice(1, -1);
+        // Render LaTeX text string, then convert to MathML
+        const content = katex.renderToString(line, {
+          throwOnError: false,
+          displayMode: false,
+          output: 'mathml',
+        });
+        return createElement('span', {
+          class: 'inline-katex-mathml-container',
+          domProps: {
+            innerHTML: content,
+          },
+        });
+      }
+
+      // Render code voice as normal if it is not LaTeX
       return createElement(CodeVoice, {}, (
         node.code
       ));

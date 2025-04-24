@@ -24,8 +24,7 @@ with the flags you would normally use.
 
 ### LaTeX Support
 
-This repository adds support for LaTeX, using the [KaTeX](https://katex.org/) library. This is
-a limited implementation that only supports display math mode, and does not support inline math mode.
+This repository adds support for LaTeX, using the [KaTeX](https://katex.org/) library.
 
 To use LaTeX in your documentation, write a code block with the language set to `math`. These code
 blocks must contain only one line of valid LaTeX code. You may use multiple lines, but note that empty
