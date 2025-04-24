@@ -211,3 +211,14 @@ code {
   font-weight: inherit;
   letter-spacing: 0;
 }
+
+// [KAI] Add background colour to inline code that is not a code block
+// This is to make it more identifiable
+:not(pre) > code {
+  /* Your styles here */
+  background: var(--color-code-background);
+  border-color: var(--colors-grid, var(--color-grid));
+  border-style: solid;
+  border-width: 1px;
+  border-radius: var(--code-border-radius, $border-radius);
+}

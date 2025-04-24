@@ -71,6 +71,10 @@ data: [
 This current implementation uses the _incredibly_ insecure `new Function()` constructor to evaluate the
 code block. This is a security risk and is likely to be changed in the future.
 
+### Code Backgrounds
+
+Inline code `blocks` now have a background colour and border, to look more like a code block.
+
 # Original README
 
 Below is the original README from the Apple Swift-DocC-Render repository.

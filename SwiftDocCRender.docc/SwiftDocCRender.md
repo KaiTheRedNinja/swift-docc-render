@@ -73,6 +73,10 @@ grid: true,
 data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
 ```
 
+#### Code Backgrounds
+
+Inline code `blocks` now have a background colour and border, to look more like a code block.
+
 ## Topics
 
 ### Contributing and internals
