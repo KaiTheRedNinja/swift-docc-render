@@ -82,6 +82,16 @@ data: [{ fn: 'sqrt(1 - x * x)' }, { fn: '-sqrt(1 - x * x)' }]
 
 Inline code `blocks` now have a background colour and border, to look more like a code block.
 
+#### Bullet points
+
+Bullet points have less spacing,
+- Making them seem like one continuous block
+- Instead of having the spacing of a paragraph
+- The padding is removed from the top
+- Extra padding is added between every element
+
+So that the next paragraph still looks distinct
+
 ## Topics
 
 ### Contributing and internals

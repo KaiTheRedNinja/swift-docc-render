@@ -76,10 +76,13 @@ $docs-code-listing-border-width: 1px !default;
 
   ol,
   ul {
-    margin-top: var(--spacing-stacked-margin-large);
+    // [KAI] The top margin is removed, and the non-first-child items are spaced
+    // with small instead of large
+
+    // margin-top: var(--spacing-stacked-margin-large);
 
     li:not(:first-child) {
-      margin-top: var(--spacing-stacked-margin-large);
+      margin-top: var(--spacing-stacked-margin-small);
     }
 
     @include breakpoint(small) {

@@ -91,13 +91,22 @@ h6 {
   }
 }
 
-// Add a top margin to everything that follows a paragraph or a list
-p,
-ul,
-ol {
-  + * {
-    margin-top: var(--spacing-stacked-margin-large);
-  }
+// [KAI] We adjust the spacing for lists to make them look closer and more related.
+// Originally, they were `large` for everything, but we use `small` for lists and
+// `xlarge` for everything else.
+
+// Large top margin for everything that follows a paragraph or list, except a ul
+p + :not(ul),
+ul + :not(ul),
+ol + :not(ul) {
+  margin-top: var(--spacing-stacked-margin-xlarge);
+}
+
+// Small top margin specifically for ul that follows a paragraph or list
+p + ul,
+ul + ul,
+ol + ul {
+  margin-top: var(--spacing-stacked-margin-small);
 }
 
 //
