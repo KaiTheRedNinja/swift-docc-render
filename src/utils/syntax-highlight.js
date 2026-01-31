@@ -265,17 +265,18 @@ export function highlightContent(content, language) {
 
   // [KAI] If the language is math, use KaTeX to render the content
   if (language === 'math') {
-    highlightedCode = '';
-    const lines = [];
-    content.forEach((line) => {
-      lines.push(katex.renderToString(line, {
-        throwOnError: false,
-        displayMode: true,
-        output: 'mathml',
-      }));
+    // join the lines, then render them all at once
+    const rawContent = content.join('\n');
+    const rendered = katex.renderToString(rawContent, {
+      throwOnError: false,
+      displayMode: true,
+      output: 'mathml',
     });
 
-    highlightedCode = lines.join('\n');
+    // eslint-disable-next-line no-console
+    console.log('KaTeX rendered content:', rendered);
+
+    highlightedCode = rendered;
   } else {
     // join the lines back
     const rawCode = content.join('\n');
@@ -290,6 +291,11 @@ export function highlightContent(content, language) {
 
   // duplicate multiline tags
   sanitizeMultilineNodes(tempElement);
+
+  if (language === 'math') {
+    // return the inner html directly
+    return [tempElement.innerHTML];
+  }
 
   // Split the html string back into individual lines, retaining newline
   // characters for empty lines so that they can be copied correctly

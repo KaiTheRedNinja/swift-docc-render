@@ -27,6 +27,14 @@ d = \pm\sqrt{e^2 + f^2}
 g = \pm\sqrt{h^2 + i^2}
 ```
 
+Or multiline expressions
+```math
+f(n) = \begin{cases} 
+\frac{n}{2},  & \text{if } n\text{ is even} \\ 
+3n+1,         & \text{if } n\text{ is odd}
+\end{cases} * \ddot{x}
+```
+
 To use inline LaTeX, use backticks (like you would for inline code), with dollar signs after the opening and before the closing backtick, and write your LaTeX code inside.
 For example, `$a^2 + b^2 = c^2$`.
 
