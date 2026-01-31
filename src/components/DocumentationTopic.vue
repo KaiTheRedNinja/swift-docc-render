@@ -62,7 +62,11 @@
           :content="abstract"
         />
         <div v-if="sampleCodeDownload">
-          <DownloadButton class="sample-download" :action="sampleCodeDownload.action" />
+          <DownloadButton
+            class="sample-download"
+            :action="sampleCodeDownload.action"
+            linksToAsset
+          />
         </div>
         <Availability
           v-if="shouldShowAvailability"
@@ -404,6 +408,10 @@ export default {
       required: false,
       validator: v => Object.prototype.hasOwnProperty.call(StandardColors, v),
     },
+    availableLanguages: {
+      type: Array,
+      required: false,
+    },
     availableLocales: {
       type: Array,
       required: false,
@@ -624,6 +632,7 @@ export default {
           conformance,
           hasNoExpandedDocumentation,
           modules,
+          availableLanguages,
           availableLocales,
           platforms,
           required: isRequirement = false,
@@ -666,6 +675,7 @@ export default {
         downloadNotAvailableSummary,
         diffAvailability,
         hasNoExpandedDocumentation,
+        availableLanguages,
         availableLocales,
         hierarchy,
         role,
@@ -717,7 +727,7 @@ export default {
       });
     }
 
-    AppStore.setAvailableLocales(this.availableLocales || []);
+    AppStore.setAvailableLocales(this.availableLanguages ?? this.availableLocales);
     this.store.reset();
     this.store.setReferences(this.references);
   },
@@ -729,8 +739,11 @@ export default {
     references(references) {
       this.store.setReferences(references);
     },
+    availableLanguages(availableLanguages) {
+      AppStore.setAvailableLocales(availableLanguages);
+    },
     availableLocales(availableLocales) {
-      AppStore.setAvailableLocales(availableLocales);
+      AppStore.setAvailableLocales(this.availableLanguages ?? availableLocales);
     },
   },
 };
@@ -816,7 +829,7 @@ $space-size: 15px;
 
   small {
     font-size: 1rem;
-    padding-left: 0.416rem;
+    padding-inline-start: 0.416rem;
   }
 }
 

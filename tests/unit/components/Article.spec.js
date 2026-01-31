@@ -17,6 +17,7 @@ import Hero from 'docc-render/components/Article/Hero.vue';
 import NavigationBar from 'docc-render/components/Tutorial/NavigationBar.vue';
 import TopicStore from 'docc-render/stores/TopicStore';
 import { PortalTarget } from 'portal-vue';
+import AppStore from 'docc-render/stores/AppStore';
 
 const { SectionKind } = Article;
 
@@ -114,7 +115,7 @@ describe('Article', () => {
   });
 
   it('renders a div.article', () => {
-    expect(wrapper.is('div.article')).toBe(true);
+    expect(wrapper.element.matches('div.article')).toBe(true);
   });
 
   it('provides a page title using the hero section title', () => {
@@ -130,7 +131,7 @@ describe('Article', () => {
   });
 
   it('renders a `NavigationBar`', () => {
-    const navBar = wrapper.find(NavigationBar);
+    const navBar = wrapper.findComponent(NavigationBar);
     expect(navBar.exists()).toBe(true);
     expect(navBar.props()).toEqual({
       chapters: propsData.hierarchy.modules,
@@ -144,14 +145,14 @@ describe('Article', () => {
   it('renders an article `Hero`', () => {
     const { kind, ...heroProps } = heroSection;
 
-    const hero = wrapper.find(Hero);
+    const hero = wrapper.findComponent(Hero);
     expect(hero.exists()).toBe(true);
     expect(hero.props()).toEqual(heroProps);
   });
 
   describe('without hero section', () => {
-    beforeEach(() => {
-      wrapper.setProps({ sections: [] });
+    beforeEach(async () => {
+      await wrapper.setProps({ sections: [] });
     });
 
     it('does not provide a page title', () => {
@@ -162,7 +163,7 @@ describe('Article', () => {
   it('renders an article `Body`', () => {
     const { kind, ...bodyProps } = bodySection;
 
-    const body = wrapper.find(Body);
+    const body = wrapper.findComponent(Body);
     expect(body.exists()).toBe(true);
     expect(body.props()).toEqual(bodyProps);
   });
@@ -170,7 +171,7 @@ describe('Article', () => {
   it('renders an assessments section', () => {
     const { kind, ...assessmentsProps } = assessmentsSection;
 
-    const assessments = wrapper.find(Assessments);
+    const assessments = wrapper.findComponent(Assessments);
     expect(assessments.exists()).toBe(true);
     expect(assessments.props()).toEqual(assessmentsProps);
   });
@@ -178,13 +179,13 @@ describe('Article', () => {
   it('renders an article `CallToAction`', () => {
     const { kind, ...ctaProps } = ctaSection;
 
-    const cta = wrapper.find(CallToAction);
+    const cta = wrapper.findComponent(CallToAction);
     expect(cta.exists()).toBe(true);
     expect(cta.props()).toEqual(ctaProps);
   });
 
   it('renders a `PortalTarget`', () => {
-    const target = wrapper.find(PortalTarget);
+    const target = wrapper.findComponent(PortalTarget);
     expect(target.exists()).toBe(true);
     expect(target.props()).toHaveProperty('name', 'modal-destination');
   });
@@ -198,6 +199,36 @@ describe('Article', () => {
       },
     });
     expect(wrapper.text()).toContain('Above Hero Text');
+  });
+
+  it('sets available langs/locales', async () => {
+    const locales = ['en-US', 'ja-JP'];
+    const langs = ['en', 'jp'];
+
+    await wrapper.setProps({
+      metadata: {
+        ...propsData.metadata,
+        availableLocales: locales,
+      },
+    });
+    expect(AppStore.state.availableLocales).toEqual(locales);
+
+    await wrapper.setProps({
+      metadata: {
+        ...propsData.metadata,
+        availableLanguages: langs,
+      },
+    });
+    expect(AppStore.state.availableLocales).toEqual(langs);
+
+    await wrapper.setProps({
+      metadata: {
+        ...propsData.metadata,
+        availableLanguages: langs,
+        availableLocales: locales,
+      },
+    });
+    expect(AppStore.state.availableLocales).toEqual(langs);
   });
 });
 
@@ -214,7 +245,7 @@ describe('with `isTargetIDE`', () => {
   });
 
   it('does not render a `NavigationBar', () => {
-    const nav = wrapper.find(NavigationBar);
+    const nav = wrapper.findComponent(NavigationBar);
     expect(nav.exists()).toBe(false);
   });
 });

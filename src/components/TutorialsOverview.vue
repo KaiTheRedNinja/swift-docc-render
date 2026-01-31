@@ -101,7 +101,9 @@ export default {
     };
   },
   created() {
-    AppStore.setAvailableLocales(this.metadata.availableLocales);
+    AppStore.setAvailableLocales(
+      this.metadata.availableLanguages ?? this.metadata.availableLocales,
+    );
     this.store.reset();
     this.store.setReferences(this.references);
   },
@@ -111,11 +113,23 @@ export default {
       this.store.setReferences(references);
     },
     'metadata.availableLocales': function availableLocalesWatcher(availableLocales) {
-      AppStore.setAvailableLocales(availableLocales);
+      AppStore.setAvailableLocales(this.metadata?.availableLanguages ?? availableLocales);
+    },
+    'metadata.availableLanguages': function availableLanguagesWatcher(availableLanguages) {
+      AppStore.setAvailableLocales(availableLanguages);
     },
   },
 };
 </script>
+
+<style lang="scss">
+@import 'docc-render/styles/_core.scss';
+
+// ensure body background is also always dark
+body:has(.tutorials-overview) {
+  --color-text-background: #{dark-color(fill)};
+}
+</style>
 
 <style scoped lang="scss">
 @import 'docc-render/styles/_core.scss';

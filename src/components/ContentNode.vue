@@ -291,6 +291,9 @@ function renderNode(createElement, references) {
         fileType: node.fileType,
         content: node.code,
         showLineNumbers: node.showLineNumbers,
+        copyToClipboard: node.copyToClipboard ?? false,
+        wrap: node.wrap ?? 0,
+        lineAnnotations: node.lineAnnotations ?? [],
       };
 
       return createElement(CodeListing, { props });

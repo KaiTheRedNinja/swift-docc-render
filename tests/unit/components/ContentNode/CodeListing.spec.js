@@ -9,13 +9,13 @@
 */
 
 import { shallowMount } from '@vue/test-utils';
-import CodeListing from 'docc-render/components/ContentNode/CodeListing.vue';
+import CodeListing, { LineStyle } from 'docc-render/components/ContentNode/CodeListing.vue';
 import { flushPromises } from '../../../../test-utils';
 
 describe('CodeListing', () => {
   const { Filename } = CodeListing.components;
 
-  it('renders the file name if provided', () => {
+  it('renders the file name if provided', async () => {
     const fileName = 'myfile';
     const isFileNameActionable = true;
 
@@ -29,7 +29,7 @@ describe('CodeListing', () => {
       },
     });
 
-    const fileNameComponent = wrapper.find(Filename);
+    const fileNameComponent = wrapper.findComponent(Filename);
     expect(fileNameComponent.exists()).toBe(true);
     expect(fileNameComponent.props('isActionable')).toBe(isFileNameActionable);
     expect(fileNameComponent.props('fileType')).toBe('swift');
@@ -37,6 +37,7 @@ describe('CodeListing', () => {
 
     // Test that an event is emitted when the file name is clicked.
     fileNameComponent.vm.$emit('click');
+    await wrapper.vm.$nextTick();
     expect(wrapper.emitted()['file-name-click']).toBeTruthy();
   });
 
@@ -51,7 +52,7 @@ describe('CodeListing', () => {
 
     await flushPromises();
 
-    const listing = wrapper.find('div.code-listing');
+    const listing = wrapper.findComponent('div.code-listing');
     expect(listing.attributes('data-syntax')).toBe('swift');
 
     const codeLineContainer = listing.find('span.code-line-container');
@@ -76,7 +77,7 @@ describe('CodeListing', () => {
 
     await flushPromises();
 
-    const pre = wrapper.find('pre');
+    const pre = wrapper.findComponent('pre');
     expect(pre.exists()).toBe(true);
 
     const codeLineContainers = wrapper.findAll('span.code-line-container');
@@ -97,6 +98,55 @@ describe('CodeListing', () => {
     });
   });
 
+  it('styles the correct lines from lineAnnotations with the specified style', async () => {
+    const content = ['a', 'b', 'c', 'd', 'e'];
+    const lineAnnotations = [
+      { style: LineStyle.highlight, range: [{ line: 1 }, { line: 1 }] },
+      { style: LineStyle.highlight, range: [{ line: 2 }, { line: 2 }] },
+      { style: LineStyle.strikeout, range: [{ line: 1 }, { line: 1 }] },
+      { style: LineStyle.strikeout, range: [{ line: 3 }, { line: 3 }] },
+    ];
+
+    const wrapper = shallowMount(CodeListing, {
+      propsData: {
+        content,
+        lineAnnotations,
+        showLineNumbers: true,
+      },
+    });
+
+    await flushPromises();
+
+    const pre = wrapper.find('pre');
+    expect(pre.exists()).toBe(true);
+
+    const codeLineContainers = wrapper.findAll('span.code-line-container');
+    expect(codeLineContainers.length).toBe(content.length);
+
+    const highlightedLines = lineAnnotations
+      .filter(a => a.style === 'highlight')
+      .flatMap(a => a.range.map(r => r.line));
+    const strikethroughLines = lineAnnotations
+      .filter(a => a.style === 'strikeout')
+      .flatMap(a => a.range.map(r => r.line));
+
+    content.forEach((line, index) => {
+      const codeLineContainer = codeLineContainers.at(index);
+      const shouldBeHighlighted = highlightedLines.includes(index + 1);
+      const shouldBeStriked = strikethroughLines.includes(index + 1);
+
+      const codeNumber = codeLineContainer.find('.code-number');
+
+      expect(codeNumber.attributes('data-line-number')).toBe(`${index + 1}`);
+
+      const codeLine = codeLineContainer.find('.code-line');
+      expect(codeLine.text()).toBe(line);
+
+      expect(codeLineContainer.classes('highlighted')).toBe(shouldBeHighlighted);
+      expect(codeLineContainer.classes('strikethrough')).toBe(shouldBeStriked);
+    });
+  });
+
   it('syntax highlights code for Swift', async () => {
     const wrapper = shallowMount(CodeListing, {
       propsData: {
@@ -106,7 +156,7 @@ describe('CodeListing', () => {
     });
     await flushPromises();
 
-    const syntaxToken = wrapper.find('.syntax-keyword');
+    const syntaxToken = wrapper.findComponent('.syntax-keyword');
     expect(syntaxToken.exists()).toBe(true);
     expect(syntaxToken.text()).toBe('let');
   });
@@ -121,7 +171,7 @@ describe('CodeListing', () => {
 
     await flushPromises();
 
-    const syntaxToken = wrapper.find('.syntax-keyword');
+    const syntaxToken = wrapper.findComponent('.syntax-keyword');
     expect(syntaxToken.exists()).toBe(true);
     expect(syntaxToken.text()).toBe('typedef');
     expect(wrapper.attributes('data-syntax')).toBe('objc');
@@ -134,9 +184,35 @@ describe('CodeListing', () => {
         content: ['let foo = "bar"'],
       },
     });
-    const syntaxToken = wrapper.find('.syntax-keyword');
+    const syntaxToken = wrapper.findComponent('.syntax-keyword');
     expect(syntaxToken.exists()).toBe(false);
     expect(wrapper.html().includes('.syntax')).toBe(false);
+  });
+
+  it('does not show copy button when its disabled', async () => {
+    const wrapper = shallowMount(CodeListing, {
+      propsData: {
+        syntax: 'swift',
+        content: ['let foo = "bar"'],
+        copyToClipboard: false,
+      },
+    });
+    await flushPromises();
+
+    expect(wrapper.find('.copy-button').exists()).toBe(false);
+  });
+
+  it('shows copy button when its enabled', async () => {
+    const wrapper = shallowMount(CodeListing, {
+      propsData: {
+        syntax: 'swift',
+        content: ['let foo = "bar"'],
+        copyToClipboard: true,
+      },
+    });
+    await flushPromises();
+
+    expect(wrapper.find('.copy-button').exists()).toBe(true);
   });
 
   it('renders code with empty spaces', async () => {
@@ -178,12 +254,12 @@ describe('CodeListing', () => {
     });
     await flushPromises();
 
-    expect(wrapper.find('.syntax-keyword').text()).toBe('let');
-    wrapper.setProps({
+    expect(wrapper.findComponent('.syntax-keyword').text()).toBe('let');
+    await wrapper.setProps({
       content: ['print("Some Text")'],
     });
     await flushPromises();
-    expect(wrapper.find('.syntax-built_in').text()).toBe('print');
+    expect(wrapper.findComponent('.syntax-built_in').text()).toBe('print');
   });
 
   it('adds a class `single-line` if only one line of code is provided', async () => {
@@ -197,12 +273,77 @@ describe('CodeListing', () => {
     await flushPromises();
 
     expect(wrapper.classes()).not.toContain('single-line');
-    wrapper.setProps({
+    await wrapper.setProps({
       content: content.slice(0, 1),
     });
 
     await flushPromises();
 
     expect(wrapper.classes()).toContain('single-line');
+  });
+
+  it('does not wrap when wrap=0', async () => {
+    const wrapper = shallowMount(CodeListing, {
+      propsData: {
+        syntax: 'swift',
+        content: ['let foo = "bar"'],
+        wrap: 0,
+      },
+    });
+    await flushPromises();
+
+    expect(wrapper.classes()).not.toContain('is-wrapped');
+
+    const style = wrapper.attributes('style') || '';
+    expect(style).not.toMatch(/--wrap-ch:\s*\d+/);
+  });
+
+  it('wraps when wrap>0 and exposes the width in style', async () => {
+    const wrapper = shallowMount(CodeListing, {
+      propsData: {
+        syntax: 'swift',
+        content: ['let foo = "bar"'],
+        wrap: 80,
+      },
+    });
+    await flushPromises();
+
+    expect(wrapper.classes()).toContain('is-wrapped');
+
+    const style = wrapper.attributes('style') || '';
+    expect(style).toMatch(/--wrap-ch:\s*80\b/);
+  });
+
+  it('reacts when wrap changes', async () => {
+    const wrapper = shallowMount(CodeListing, {
+      propsData: {
+        syntax: 'swift',
+        content: ['let foo = "bar"'],
+        wrap: 80,
+      },
+    });
+    await flushPromises();
+
+    expect(wrapper.classes()).toContain('is-wrapped');
+
+    let style = wrapper.attributes('style') || '';
+    expect(style).toMatch(/--wrap-ch:\s*80\b/);
+
+    await wrapper.setProps({ wrap: 0 });
+    style = wrapper.attributes('style') || '';
+    expect(style === null || style === '').toBe(true);
+  });
+
+  it('treats negative wrap as no-wrap', async () => {
+    const wrapper = shallowMount(CodeListing, {
+      propsData: {
+        syntax: 'swift',
+        content: ['let foo = "bar"'],
+        wrap: -5,
+      },
+    });
+    await flushPromises();
+
+    expect(wrapper.classes()).not.toContain('is-wrapped');
   });
 });

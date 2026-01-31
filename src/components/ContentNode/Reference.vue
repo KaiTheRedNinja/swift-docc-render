@@ -53,7 +53,7 @@ import ReferenceInternal from './ReferenceInternal.vue';
 export default {
   name: 'Reference',
   computed: {
-    isInternal({ url }) {
+    isInternal({ url, linksToAsset }) {
       if (!url) {
         return false;
       }
@@ -61,6 +61,8 @@ export default {
         // If the URL has a scheme, it's not an internal link.
         return false;
       }
+
+      if (linksToAsset) return false;
 
       // Resolve the URL using the router.
       const {
@@ -70,7 +72,7 @@ export default {
       } = this.$router.resolve(url) || {};
 
       // Resolved internal URLs don't have the "not found" route.
-      return name !== notFoundRouteName;
+      return !name.startsWith(notFoundRouteName);
     },
     isSymbolReference() {
       return this.kind === 'symbol' && !this.hasInlineFormatting
@@ -119,6 +121,10 @@ export default {
       required: false,
     },
     hasInlineFormatting: {
+      type: Boolean,
+      default: false,
+    },
+    linksToAsset: {
       type: Boolean,
       default: false,
     },

@@ -32,7 +32,7 @@ describe('ButtonLink', () => {
       },
     });
 
-    const ref = wrapper.find(Reference);
+    const ref = wrapper.findComponent(Reference);
     expect(ref.exists()).toBe(true);
     expect(ref.props('url')).toBe(propsData.url);
     expect(ref.classes('button-cta')).toBe(true);
@@ -48,7 +48,7 @@ describe('ButtonLink', () => {
       },
     });
 
-    const button = wrapper.find('button');
+    const button = wrapper.findComponent('button');
     expect(button.exists()).toBe(true);
     expect(button.classes('button-cta')).toBe(true);
     expect(button.text()).toBe(slotValue);
@@ -62,5 +62,18 @@ describe('ButtonLink', () => {
       },
     });
     expect(wrapper.classes()).toContain('is-dark');
+  });
+
+  it('passes the `linksToAsset` prop to `Reference`', () => {
+    const wrapper = shallowMount(ButtonLink, {
+      propsData: {
+        ...propsData,
+        linksToAsset: true,
+      },
+    });
+
+    const ref = wrapper.findComponent(Reference);
+    expect(ref.exists()).toBe(true);
+    expect(ref.props('linksToAsset')).toBe(true);
   });
 });
