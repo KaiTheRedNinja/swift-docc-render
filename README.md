@@ -9,16 +9,23 @@ your code compiles. To preview the produced documentation, see the [Usage](#usag
 
 ## Usage
 
-1. Follow steps 1 and 2 of the installation instructions in the [Getting Started](#getting-started) section.
-2. Use `npm run build` to build the project. This should produce a `dist` directory in the project.
-3. Run `export DOCC_HTML_DIR="/path/to/swift-docc-render/dist"` in the terminal, where the path is the location 
+This is DIFFERENT from the instructions in the main docc-render repository!
+
+Setup:
+1. Install the required NodeJS version, v22.17.0, via `nvm install`
+2. Run `npm install` to install dependencies
+
+Development:
+3. Run `VUE_APP_DEV_SERVER_PROXY=[path to documentation archive] npm run serve` to start the live preview server
+
+Deployment:
+4. Use `npm run build` to build the project. This should produce a `dist` directory in the project.
+5. Run `export DOCC_HTML_DIR="/path/to/swift-docc-render/dist"` in the terminal, where the path is the location 
 of the `dist` directory in the project.
+6. To use your renderer to build your own project, run `xcrun docc convert . --transform-for-static-hosting` with the flags you 
+would normally use.
 
-To preview the documentation, run `npm run docs` to open this project's documentation, using your compiled
-renderer. This will open a preview server on http://localhost:8000/documentation/swiftdoccrender.
-
-To use your renderer to build your own project, run `xcrun docc convert . --transform-for-static-hosting` 
-with the flags you would normally use.
+Do NOT use `npm run docs` - that function does not work in this repo for some reason.
 
 ## Changes
 

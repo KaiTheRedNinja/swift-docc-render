@@ -48,9 +48,13 @@ $docs-code-listing-border-width: 1px !default;
     pre {
       padding: var(--code-block-style-elements-padding);
 
+      // [KAI]: Remove styling from code blocks, since we use it more for math than
+      // code and the default math style looks better without font adjustments
+      /*
       > code {
         @include font-styles(documentation-code-listing);
       }
+        */
     }
   }
 
