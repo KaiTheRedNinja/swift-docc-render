@@ -17,7 +17,7 @@
   <div :id="graphId"></div>
 </template>
 
-<script lang="ts">
+<script>
 import { onMounted } from 'vue';
 import functionPlot from 'function-plot';
 
@@ -31,16 +31,81 @@ export default {
     onMounted(() => {
       try {
         // Create a new function with the raw parameters passed in the content prop
-        // eslint-disable-next-line no-new-func
-        const plotConfigFunction = new Function(`
-          return {
-            target: "#${props.graphId}",
-            ${props.content}
-          };
-        `);
+        // eslint-disable-next-line
+        let plotConfig = { target: `#${props.graphId}`, xAxis: {}, yAxis: {}, data: [], annotations: [], tip: {} };
 
-        // Execute the function to get the config object
-        const plotConfig = plotConfigFunction();
+        // Validate that content exists and is not empty
+        if (!props.content || props.content.length === 0) {
+          return;
+        }
+        const lines = props.content.split('\n');
+
+        // Process each line of the content prop
+        lines.slice(1).forEach((line) => {
+          // Ignore comment and empty lines
+          if (line.trim().startsWith('//') || line.trim() === '') return;
+          // If the line starts with #, it is trying to change the plotConfig directly
+          if (line.trim().startsWith('#')) {
+            const firstSpaceIndex = line.indexOf(' ');
+            if (firstSpaceIndex === -1) {
+              return; // Invalid line, skip
+            }
+
+            const rawPath = line.slice(1, firstSpaceIndex).trim();
+            const rawValue = line.slice(firstSpaceIndex + 1).trim();
+
+            const formattedValue = (() => {
+              // Try to parse as JSON first
+              try {
+                return JSON.parse(rawValue);
+              } catch {
+                // If that fails, return as string/number/boolean
+                if (rawValue === 'true') return true;
+                if (rawValue === 'false') return false;
+                if (!Number.isNaN(Number(rawValue))) return Number(rawValue);
+                return rawValue;
+              }
+            })();
+
+            // eslint-disable-next-line no-console
+            console.log(`Setting plotConfig at path ${rawPath} to value:`, rawValue, formattedValue);
+
+            const path = rawPath
+              .replace(/^#/, '') // remove leading #
+              .split('.')
+              .map(p => (p.match(/^\d+$/) ? Number(p) : p));
+            let current = plotConfig;
+
+            for (let i = 0; i < path.length; i += 1) {
+              const key = path[i];
+              const nextKey = path[i + 1];
+
+              // last key → assign
+              if (i === path.length - 1) {
+                current[key] = formattedValue;
+                return;
+              }
+
+              // create missing structure
+              if (current[key] == null) {
+                current[key] = typeof nextKey === 'number' ? [] : {};
+              }
+
+              current = current[key];
+            }
+
+            current = formattedValue;
+          } else {
+            // Otherwise, treat it as a data function
+            if (plotConfig.data == null) {
+              plotConfig.data = [];
+            }
+            plotConfig.data.push({ fn: line.trim() });
+          }
+        });
+
+        // eslint-disable-next-line no-console
+        console.log('FunctionPlot configuration:', plotConfig);
 
         // Call functionPlot with the generated configuration
         functionPlot(plotConfig);

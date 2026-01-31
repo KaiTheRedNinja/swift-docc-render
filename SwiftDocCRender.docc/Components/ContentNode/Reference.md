@@ -1,4 +1,4 @@
-# ``ContentNode/Reference``
+# ContentNode
 
 ## Examples
 

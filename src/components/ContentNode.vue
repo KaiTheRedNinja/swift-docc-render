@@ -279,7 +279,7 @@ function renderNode(createElement, references) {
         // Graph must at least have a name
         if (node.code.length === 0) return null;
         const props = {
-          content: node.code.slice(1).join('\n'),
+          content: node.code.join('\n'),
           graphId: `graph-${node.code[0]}`, // name of graph
         };
         return createElement(FunctionPlot, { props });

@@ -1,4 +1,4 @@
-# ``SwiftDocCRender``
+# SwiftDocCRender
 
 A web renderer for DocC Archives produced by DocC.
 
@@ -59,22 +59,40 @@ This implementation of graphs hijacks the `graph` code block language to render 
 [function-plot](https://mauriciopoppe.github.io/function-plot/) library. This implementation exposes all
 parameters to the documentation writer.
 
-```graph
-quadratic
-yAxis: { domain: [-1, 9] },
-grid: true,
-data: [
-    {
-        fn: "x^2",
-        derivative: {
-            fn: "2 * x",
-            updateOnMouseMove: true,
-        },
-    },
-],
-```
+The syntax for a graph is as such:
+- The first item in the graph is the ID, and *must be* the ID. This must be unique within a page!
+- If you want to configure something via the function_plot API:
+  - Start it with a hash `#`
+  - With no space, put the path to the object as `path.to.property.here`. For array access, simply put the index.
+  - Put your value there. It will be read as JSON, so ensure you wrap strings with quotation marks. Multiline JSON is not supported.
+  - Example: `#yAxis.domain [-1, 9]`
+  - If you access `path.to.property.here`, `path.to.property` must already exist. The following properties are prepopulated as empty:
+    - xAxis (dictionary)
+    - yAxis (dictionary)
+    - data (array)
+    - annotations (array)
+    - tip (dictionary)
+- Anything that does not start with `#` or `//` is treated as a regular function
 
 ```graph
+quadratic
+#yAxis { "domain": [-1, 9] }
+#grid true
+
+x^2
+#data.0.derivative { "fn": "2 * x", "updateOnMouseMove": true }
+```
+
+```
+quadratic
+#yAxis { "domain": [-1, 9] }
+#grid true
+
+x^2
+#data.0.derivative { "fn": "2 * x", "updateOnMouseMove": true }
+```
+
+```
 circle
 xAxis: {
   label: 'real'
@@ -107,9 +125,5 @@ So that the next paragraph still looks distinct
 - <doc:Internals>
 
 ### Commonly used components
-
-- ``ContentNode``
-- ``ContentNode/Reference``
-- ``WordBreak``
 
 <!-- Copyright (c) 2021 Apple Inc and the Swift Project authors. All Rights Reserved. -->
